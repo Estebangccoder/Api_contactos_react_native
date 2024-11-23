@@ -2,12 +2,12 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { contact } from './contacts/entities/contact.entity';
+import { Contact } from './contacts/entities/contact.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ContactsController } from './contacts/contacts.controller';
-import { ContactsService } from './contacts/contacts.service';
 import { ContactsModule } from './contacts/contacts.module';
 import { UsersModule } from './users/users.module';
+import { User } from './auth/entities/user.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -19,10 +19,10 @@ import { UsersModule } from './users/users.module';
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    entities: [__dirname + '/**/*.entity{.ts,.js}', contact],
+    entities: [__dirname + '/**/*.entity{.ts,.js}', Contact, User],
     synchronize: true,
-  }), ContactsModule, UsersModule],
-  controllers: [AppController, ContactsController],
-  providers: [AppService, ContactsService],
+  }), ContactsModule, AuthModule],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
