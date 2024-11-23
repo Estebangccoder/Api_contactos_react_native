@@ -1,9 +1,9 @@
-import {ApiProperty } from "@nestjs/swagger";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-
+import {ApiHideProperty, ApiProperty } from "@nestjs/swagger";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "src/auth/entities/user.entity";
 
 @Entity('contact')
-export class contact{
+export class Contact{
     @PrimaryGeneratedColumn('uuid')
     @ApiProperty({
         description: 'Id of the contact',
@@ -51,6 +51,18 @@ export class contact{
         description: 'Longitude of the contact location ',
         example:'-75.5438637'
     })
-    longitude:string
+    longitude:string;
+
+    @Column({ type: 'varchar', nullable: false })
+    @ApiProperty({
+        description: 'ID of the user',
+        example: '324f0caf-2501-4fe0-a7be-216afb0c5dff',
+    })
+    user_id: string;
+
+    @ApiHideProperty()
+    @ManyToOne(() => User, (user) => user.contacts)
+    @JoinColumn({ name: 'user_id' })
+    userId: User;
 }
 
